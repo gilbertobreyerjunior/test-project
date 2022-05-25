@@ -3,82 +3,101 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class CandidatoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        //
+
+        $can = User::all();
+
+        return view('candidatos.lista', compact('can'));
+
+
+
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    protected function validator(array $data)
     {
-        //
+        return Validator::make($data, [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
+    public function create(Request $request)
+    {
+
+
+
+        $ca = new User();
+        $ca->name = $request->input('nome');
+        $ca->email = $request->input('email');
+        $ca->password = Hash::make($request->input('password'));
+        $ca->telephone = $request->input('telefone');
+        $ca->expe_pro = $request->input('expepro');
+        $ca->expe_aca = $request->input('expeaca');
+        $ca->user = $request->input('usuario');
+
+
+        $ca->save();
+        return redirect('/');
+    }
+
+
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
-        //
-    }
+        $ca = User::find($id);
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+        if (isset($ca)) {
+        return view('candidatos.editar', compact('ca'));
+    }
+}
+
+
     public function update(Request $request, $id)
     {
-        //
+        $ca = User::find($id);
+
+        if (isset($ca)) {
+
+            $ca = new User();
+            $ca->name = $request->input('nome');
+            $ca->email = $request->input('email');
+            $ca->telephone = $request->input('telefone');
+            $ca->expe_pro = $request->input('expepro');
+            $ca->expe_aca = $request->input('expeaca');
+            $ca->user = $request->input('usuario');
+            $ca->save();
+        }
+        return redirect('/visualiza');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy($id)
     {
-        //
+        $ca = Candidato::find($id);
+        $ca->delete();
+        return redirect('/visualiza');
     }
 }

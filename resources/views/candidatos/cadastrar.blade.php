@@ -10,11 +10,12 @@
         <div class="col-lg-12">
             <h2>Cadastro de Candidato </h2>
             <h3>Etapa <span id="passo"></span></h3>
-            <form action="processa.php" method="post">
+            <form action="{{ route('cadastrar.candidato') }}" method="post">
+
                 <div id="step_1" class="step">
                         <div class="form-group">
                             <label for="nome">Nome:</label>
-                            <input type="text" name="nome" id="nome" class="form-control">
+                            <input type="text" name="nome" id="nome" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="email">Email:</label>
@@ -40,14 +41,42 @@
                             <label for="usuario">Usuário:</label>
                             <input type="text" name="usuario" id="usuario" class="form-control">
                         </div>
-                        <div class="form-group">
-                            <label for="bairro">Senha:</label>
+                        {{--  <div class="form-group">
+                            <label for="senha">Senha:</label>
                             <input type="text" name="senha" id="senha" class="form-control">
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-sm btn-primary">Enviar</button>
+                            <label for="confirmasenha">Confirme a Senha:</label>
+                            <input type="text" name="confirmasenha" id="confirmasenha" class="form-control">
+                        </div>  --}}
+                        <div class="form-group row">
+                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <input type="submit" name="submit" value="enviar">Enviar</button>
                         </div>
                 </div>
+                @csrf
             </form>
         </div>
     </div>
@@ -56,7 +85,7 @@
                     <button class="btn btn-block btn-secondary" id="prev">Anterior</button>
             </div>
             <div class="col-lg-6">
-                    <button class="btn btn-block btn-secondary" id="next">Próximo</button>
+                    <button class="btn btn-block btn-secondary" id="next" onclick="return valida_form(this)">Próximo</button>
             </div>
     </div>
 </div>
@@ -99,6 +128,7 @@
 
 
                            $("#next").click(function(){
+
                                $(".step:visible").hide().next().show();
                                passoexibido();
                            });
@@ -113,6 +143,33 @@
                        </script>
 
 
+                       <script type="text/javascript" language="javascript">
+
+                        function valida_form(){
+                            var mail = document.getElementById("email").value;
+                            var tel = document.getElementById("telefone").value;
+
+                            if(mail == null || mail == ''){
+                              document.getElementById("telefone").required = true;
+                              document.getElementById("telefone").focus();
+                              return false;
+                            }
+
+                            if(tel == null || tel == ''){
+                              document.getElementById("email").required = true;
+                              document.getElementById("email").focus();
+                              return false;
+                            }
+
+                            if(tel !== '' || mail == ''){
+                              return True;
+                            }
+                            if(tel == '' || mail !== ''){
+                              return True;
+                            }
+                          }
+
+                        </script>
 
 
                     @endsection

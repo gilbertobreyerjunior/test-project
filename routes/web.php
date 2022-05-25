@@ -14,5 +14,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('candidatos.cadastrar');
 });
+
+
+Route::post('/cadastrar', 'CandidatoController@create')->name('cadastrar.candidato');
+
+Route::get('/visualiza', 'CandidatoController@index')->name('visualiza.candidato');
+Route::get('/editar/{id}', 'CandidatoController@edit')->name('edit.candidato');
+Route::post('/editado/{id}', 'CandidatoController@update')->name('editado.candidato');
+Route::delete('/excluir/{id}', 'CandidatoController@destroy');
